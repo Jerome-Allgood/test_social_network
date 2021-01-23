@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
+    'post',
+    'register',
 ]
 
 MIDDLEWARE = [
@@ -99,6 +101,9 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+# User substitution
+AUTH_USER_MODEL = 'register.User'
 
 
 # Internationalization
