@@ -4,7 +4,11 @@ from django.conf import settings
 from rest_framework import serializers, status
 
 from register.models import User
-from rest_framework.exceptions import ValidationError
+
+
+def _get_email_verification_url(email):
+	return 'https://api.hunter.io/v2/email-verifier?email={}&api_key={}'.format(
+		email, settings.EMAILHUNTER_API_KEY)
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -15,10 +19,12 @@ class UserSerializer(serializers.ModelSerializer):
 		read_only_fields = ('id',)
 
 	def validate_email(self, value):
-		ver_url = f'https://api.hunter.io/v2/email-verifier?email={value}&api_key={settings.EMAILHUNTER_API_KEY}'
-		verification = requests.get(ver_url)
-		if verification.status_code == status.HTTP_400_BAD_REQUEST or verification.json()['data']['status'] in ['invalid', 'unknown']:
-			raise serializers.ValidationError('Email did not pass validation. Please check')
+		response = requests.get(_get_email_verification_url(value))
+		if (response.status_code == status.HTTP_400_BAD_REQUEST or
+				response.json()['data']['status'] in ['invalid', 'unknown']):
+			raise serializers.ValidationError(
+				'Email did not pass validation. Please check'
+			)
 
 	def create(self, validated_data):
 		user = User.objects.create(
