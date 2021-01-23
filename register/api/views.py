@@ -5,8 +5,5 @@ from register.api.serializers import UserSerializer
 
 
 class CreateUserView(CreateAPIView):
-
-    permission_classes = [
-        permissions.AllowAny,
-    ]
+    permission_classes = [permissions.AllowAny,]
     serializer_class = UserSerializer
