@@ -42,6 +42,7 @@ class User(AbstractUser):
 
     username = None
     email = models.EmailField(_('email address'), unique=True)
+    liked_posts = models.ManyToManyField('post.Post', related_name='likes')
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
