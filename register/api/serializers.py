@@ -25,6 +25,7 @@ class UserSerializer(serializers.ModelSerializer):
 			raise serializers.ValidationError(
 				'Email did not pass validation. Please check'
 			)
+		return value
 
 	def create(self, validated_data):
 		user = User.objects.create(
