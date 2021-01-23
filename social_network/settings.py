@@ -128,3 +128,5 @@ STATIC_URL = '/static/'
 
 # Always use IPython for shell_plus
 SHELL_PLUS = "ipython"
+
+EMAILHUNTER_API_KEY = 'a675e18462d1f4f037c2572baf874593751f31f6'
