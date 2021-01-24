@@ -40,11 +40,3 @@ class LogoutView(APIView):
     def get(self, request):
         logout(request)
         return Response(status=status.HTTP_200_OK)
-
-
-# def LikePostView(APIView):
-#     def post(self, request):
-#
-#         pass
-
-
