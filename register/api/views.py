@@ -34,6 +34,8 @@ class LoginView(APIView):
             login(request, user)
             data = get_tokens_for_user(user)
             return Response(status=status.HTTP_200_OK, data=data)
+        return Response(status=status.HTTP_400_BAD_REQUEST,
+                        data={'status': 'failed'})
 
 
 class LogoutView(APIView):
