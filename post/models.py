@@ -5,6 +5,8 @@ from register.models import User
 
 
 class Post(models.Model):
+	"""Stores a single post entry, related to :model:`register.User`."""
+
 	author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
 	body = models.TextField()
 	created_at = models.DateTimeField(auto_now_add=True, null=True)

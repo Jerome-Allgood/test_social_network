@@ -10,11 +10,16 @@ from register.api.serializers import UserSerializer, UserLoginSerializer
 
 
 class CreateUserView(CreateAPIView):
+    """Creates new user.
+    """
+
     permission_classes = [permissions.AllowAny,]
     serializer_class = UserSerializer
 
 
 def get_tokens_for_user(user):
+    """Returns generated pair of JWT tokens for user.
+    """
     refresh = RefreshToken.for_user(user)
 
     return {
@@ -24,6 +29,15 @@ def get_tokens_for_user(user):
 
 
 class LoginView(APIView):
+    """
+    Returns tokens for JWT authentication.
+
+    Token **access** should added to headers as Authorization Bearer.
+    Token **refresh** can be used for renewing access token [here][ref]
+
+    [ref]: http://localhost:8000/token/refresh/
+    """
+
     serializer_class = UserLoginSerializer
 
     def post(self, request):
@@ -39,6 +53,9 @@ class LoginView(APIView):
 
 
 class LogoutView(APIView):
+    """Logout user from system.
+    """
+
     def get(self, request):
         logout(request)
         return Response(status=status.HTTP_200_OK)

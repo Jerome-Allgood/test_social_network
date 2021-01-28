@@ -5,7 +5,8 @@ from django.utils.translation import gettext_lazy as _
 
 
 class UserManager(BaseUserManager):
-    """Define a model manager for User model with no username field."""
+    """Define a model manager for User model with no username field.
+    """
 
     use_in_migrations = True
 
@@ -38,7 +39,8 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractUser):
-    """User model."""
+    """Stores a single user entry, related to :model:`post.Post`.
+    """
 
     username = None
     email = models.EmailField(_('email address'), unique=True)

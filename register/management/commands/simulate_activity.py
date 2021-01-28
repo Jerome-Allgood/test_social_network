@@ -9,14 +9,22 @@ from faker import Faker
 from rest_framework import status
 
 from post.models import Post
-
-NUMBER_OF_USERS = 3
-MAX_POST_PER_USER = 5
-MAX_LIKES_PER_USER = 2
+from register.management.commands.constants.constants import (
+    NUMBER_OF_USERS, MAX_POST_PER_USER, MAX_LIKES_PER_USER)
 
 
 class Command(BaseCommand):
-    help = """Test"""
+    help = """Command that demonstrate required flow.
+    Automatically created this activity:
+    1) new Users sign up (according to NUMBER_OF_USERS constant;
+    2) each user creates random number of Posts with generated content (up to 
+    MAX_POST_PER_USER constant;
+    3) Posts are liked randomly (according to MAX_LIKES_PER_USER constant).
+    
+    You are free to override those constants to get best suitable outcome.
+    Please be aware that email validation via emailhunter.co disabled by default
+    for demonstration purposes. 
+    """
     signup_url = settings.BASE_URL + reverse('register')
     login_url = settings.BASE_URL + reverse('login')
     create_post_url = settings.BASE_URL + reverse('create_post')
@@ -30,10 +38,13 @@ class Command(BaseCommand):
                 last_name=self.faker.last_name(),
                 email=self.faker.email(),
                 password=self.faker.password())
-            test_users.update({user_data['email']: user_data['password']})
 
             r = requests.post(self.signup_url, user_data)
-
+            if r.status_code == status.HTTP_201_CREATED:
+                print(f'User {user_data["email"]} successfully signed up.')
+                test_users.update({user_data['email']: user_data['password']})
+            else:
+                print(f'User {user_data["email"]} was not created.')
         return test_users
 
     def user_activity(self, users):
@@ -43,12 +54,15 @@ class Command(BaseCommand):
             login = requests.post(self.login_url, data={'email': email,
                                                         'password': password})
             if login.status_code == status.HTTP_200_OK:
+                print(f'User {email} successfully logged in.')
                 auth_token = login.json()['access']
                 header = {'Authorization': 'Bearer ' + auth_token}
                 for i in range(post_capacity):
-                    requests.post(self.create_post_url,
-                                  data={'body': self.faker.text()},
-                                  headers=header)
+                    post = requests.post(self.create_post_url,
+                                         data={'body': self.faker.text()},
+                                         headers=header)
+                    if post.status_code == status.HTTP_201_CREATED:
+                        print(f'User {email} successfully created post.')
             else:
                 print(f'Authorization problems for user {email}')
 

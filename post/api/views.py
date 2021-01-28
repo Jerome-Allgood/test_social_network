@@ -9,6 +9,13 @@ from post.models import Post
 
 
 class CreatePostView(CreateAPIView):
+	"""Creates new Post.
+
+	Required parameters
+	-----------
+	body: 'text'
+	"""
+
 	permission_classes = [permissions.IsAuthenticated,]
 	serializer_class = PostSerializer
 
@@ -27,12 +34,17 @@ class CreatePostView(CreateAPIView):
 
 
 class ListPostView(ListAPIView):
+	"""Returns a list of all posts in the system."""
+
 	permission_classes = [permissions.IsAuthenticated,]
 	serializer_class = PostSerializer
 	queryset = Post.objects.all()
 
 
 class LikePostView(UpdateAPIView):
+	"""Creates or removes relation between User and Post.
+	"""
+
 	permission_classes = [permissions.IsAuthenticated,]
 
 	def post(self, request, pk):
